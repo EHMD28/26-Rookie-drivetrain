@@ -33,5 +33,8 @@ public final class Constants {
         public static final int backLeftTurningId = 4;
         // Other drive constants.
         public static final double driverStickDeadband = 0.05;
+        public static final double drivingVelocityConversionFactor = 60.0;
+        public static final double turningGearRatio = 4.0;
+        public static final double turningPositionConversionFactor = 2 * Math.PI;
     }
 }

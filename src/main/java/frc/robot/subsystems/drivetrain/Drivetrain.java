@@ -1,5 +1,6 @@
 package frc.robot.subsystems.drivetrain;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
@@ -18,8 +19,13 @@ public class Drivetrain extends SubsystemBase {
             backRightModule,
             backLeftModule
     };
+    private double currentDriveSpeed = 0.0;
 
     // TODO: Definitely going to need a gyroscope for keeping track of heading.
+
+    public void setCurrentDriveSpeed(double currentDriveSpeed) {
+        this.currentDriveSpeed = currentDriveSpeed;
+    }
 
     /**
      * Drive the robot in the specified direction. Currently, the robot can either
@@ -41,11 +47,14 @@ public class Drivetrain extends SubsystemBase {
 
         if (isTranslating) {
             double angle = Math.atan2(y, x);
+            // Magnitude is the sqrt(a^2 + b^2)
+            double magnitude = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))
+                    * DriveConstants.drivingVelocityConversionFactor;
             turnAllTo(angle);
-            driveAll(0.2);
+            driveAll(magnitude);
         } else {
             goToTurnPositions();
-            driveAll(0.2);
+            driveTurning(rotation * DriveConstants.drivingVelocityConversionFactor);
         }
     }
 
@@ -62,20 +71,29 @@ public class Drivetrain extends SubsystemBase {
 
     public void goToTurnPositions() {
         // Roughly what the modules should look like
+        //
+        //    front
         // ┌---------┐ 
         // | /     \ |
         // |         |
         // | \     / |
         // └---------┘
-        frontLeftModule.turnToAngle(45);
-        frontRightModule.turnToAngle(315);
-        backRightModule.turnToAngle(225);
-        backLeftModule.turnToAngle(135);
+        frontLeftModule.turnToAngle(Math.PI / 4);
+        frontRightModule.turnToAngle(-Math.PI / 4);
+        backRightModule.turnToAngle(Math.PI / 4);
+        backLeftModule.turnToAngle(-Math.PI / 4);
     }
 
-    public void driveAll(double speed) {
+    public void driveTurning(double rpm) {
+        frontLeftModule.drive(rpm);
+        frontRightModule.drive(-rpm);
+        backRightModule.drive(-rpm);
+        backLeftModule.turnToAngle(rpm);
+    }
+
+    public void driveAll(double rpm) {
         for (SwerveModule module : allModules) {
-            module.drive(speed);
+            module.drive(rpm);
         }
     }
 
