@@ -22,14 +22,16 @@ public final class Constants {
     }
 
     public static class DriveConstants {
-        // TODO: Change these to real values.
-        public static final int frontLeftDrivingId = 0;
-        public static final int frontLeftTurningId = 0;
-        public static final int frontRightDrivingId = 0;
-        public static final int frontRightTurningId = 0;
-        public static final int backRightDrivingId = 0;
-        public static final int backRightTurningId = 0;
-        public static final int backLeftDrivingId = 0;
-        public static final int backLeftTurningId = 0;
+        // CAN IDs
+        public static final int frontLeftDrivingId = 3;
+        public static final int frontLeftTurningId = 5;
+        public static final int frontRightDrivingId = 32;
+        public static final int frontRightTurningId = 2;
+        public static final int backRightDrivingId = 8;
+        public static final int backRightTurningId = 7;
+        public static final int backLeftDrivingId = 22;
+        public static final int backLeftTurningId = 4;
+        // Other drive constants.
+        public static final double driverStickDeadband = 0.05;
     }
 }

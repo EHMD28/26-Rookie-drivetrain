@@ -31,7 +31,7 @@ public class Drivetrain extends SubsystemBase {
      * @param rotation The amount to rotate (-1.0 is clockwise, 1.0 is counterclockwise)
      */
     public void drive(double x, double y, double rotation) {
-        // You can check for 0 directly because the controller applies a deadband.
+        // Checking for 0 directly because the controller applies a deadband.
         boolean isTranslating = (x != 0.0) || (y != 0.0);
         boolean isTurning = rotation != 0.0;
         if (isTranslating && isTurning) {
@@ -42,8 +42,10 @@ public class Drivetrain extends SubsystemBase {
         if (isTranslating) {
             double angle = Math.atan2(y, x);
             turnAllTo(angle);
+            driveAll(0.2);
         } else {
             goToTurnPositions();
+            driveAll(0.2);
         }
     }
 
