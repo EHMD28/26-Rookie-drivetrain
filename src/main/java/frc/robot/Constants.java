@@ -35,9 +35,9 @@ public final class Constants {
         /** Max angular speed in radians per second. */
         public static final double maxAngularSpeed = 2 * Math.PI;
         // TODO: Measure chassis.
-        /** Horizontal center distance (left to right). */
+        /** Horizontal center distance in meters (left to right). */
         public static final double horizontalChassisWidth = Units.inchesToMeters(26.5);
-        /** Vertical wheel center distance (front to back). */
+        /** Vertical wheel center distance in meters (front to back). */
         public static final double verticalChassisWidth = Units.inchesToMeters(26.5);
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
                 new Translation2d(verticalChassisWidth / 2, horizontalChassisWidth / 2),
@@ -46,6 +46,7 @@ public final class Constants {
                 new Translation2d(-verticalChassisWidth / 2, -horizontalChassisWidth / 2));
 
         /* Angular offsets of the modules relative to the chassis in radians */
+        // TODO: Zero encoders
         public static final double frontLeftAngularOffset = -Math.PI / 2;
         public static final double frontRightAngularOffset = 0;
         public static final double backLeftAngularOffset = Math.PI;
@@ -66,10 +67,9 @@ public final class Constants {
         public static final boolean isGyroReversed = false;
     }
 
-    public static final class ModuleConstants {
+    public static final class SwerveModuleConstants {
         // The number of teeth on the pinion gear for the driving motor is 13.
         public static final int drivingPinionTeeth = 13;
-
         // Calculations required for driving motor conversion factors and feed forward
         public static final double drivingMotorFreeSpeedRps = NeoMotorConstants.freeSpeedRpm / 60;
         public static final double wheelDiameterMeters = 0.0762;
