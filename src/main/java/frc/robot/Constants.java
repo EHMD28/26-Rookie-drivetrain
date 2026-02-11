@@ -39,7 +39,7 @@ public final class Constants {
         public static final double horizontalChassisWidth = Units.inchesToMeters(26.5);
         /** Vertical wheel center distance in meters (front to back). */
         public static final double verticalChassisWidth = Units.inchesToMeters(26.5);
-        public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
+        public static final SwerveDriveKinematics driveKinematics = new SwerveDriveKinematics(
                 new Translation2d(verticalChassisWidth / 2, horizontalChassisWidth / 2),
                 new Translation2d(verticalChassisWidth / 2, -horizontalChassisWidth / 2),
                 new Translation2d(-verticalChassisWidth / 2, horizontalChassisWidth / 2),

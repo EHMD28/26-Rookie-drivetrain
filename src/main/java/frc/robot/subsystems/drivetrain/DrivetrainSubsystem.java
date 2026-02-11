@@ -6,11 +6,7 @@ import com.studica.frc.AHRS.NavXComType;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.ADIS16448_IMU.IMUAxis;
-import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
@@ -36,19 +32,29 @@ public class DrivetrainSubsystem extends SubsystemBase {
             DriveConstants.backLeftTurningId,
             DriveConstants.backLeftAngularOffset);
 
-    // TODO: Find right gyro model. 
+    // The robot uses a Studica NavX2 MXP IMU.
     private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
 
+    /**
+     * Drive the robot using inputs from the joysticks. The x-speed is from the x-axis of the left joystick.
+     * The y-speed (left-to-right) is from the y-axis of the left joystick. The rotation is from the y-axis
+     * of the right joystick.
+     * 
+     * @param xSpeed The speed of the robot in the x-direction (front-to-back) on a [-1.0, 1.0] scale.
+     * @param ySpeed The speed of the robot in the y-direction (left-to-right) on  a [-1.0, 1.0] scale.
+     * @param rot
+     * @param fieldRelative
+     */
     public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
         // Convert the commanded speeds into the correct units for the drivetrain
         double xSpeedDelivered = xSpeed * DriveConstants.maxSpeed;
         double ySpeedDelivered = ySpeed * DriveConstants.maxSpeed;
         double rotDelivered = rot * DriveConstants.maxAngularSpeed;
 
-        var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+        var swerveModuleStates = DriveConstants.driveKinematics.toSwerveModuleStates(
                 fieldRelative
                         ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
-                                Rotation2d.fromDegrees(gyro.getAngle()))
+                                getHeading())
                         : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
         setModuleStates(swerveModuleStates);
     }
@@ -73,6 +79,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
 
     public Rotation2d getHeading() {
-        return Rotation2d.fromDegrees(gyro.getAngle());
+        double direction = DriveConstants.isGyroReversed ? -1 : 1;
+        return Rotation2d.fromDegrees(direction * gyro.getAngle());
     }
 }
