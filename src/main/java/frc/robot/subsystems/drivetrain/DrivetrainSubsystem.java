@@ -42,8 +42,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
      * 
      * @param xSpeed The speed of the robot in the x-direction (front-to-back) on a [-1.0, 1.0] scale.
      * @param ySpeed The speed of the robot in the y-direction (left-to-right) on  a [-1.0, 1.0] scale.
-     * @param rot
-     * @param fieldRelative
+     * @param rot The rotation of the robot on a [-1.0, 1.0] scale.
+     * @param fieldRelative Whether or not to drive the robot relative the current field.
      */
     public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
         // Convert the commanded speeds into the correct units for the drivetrain
