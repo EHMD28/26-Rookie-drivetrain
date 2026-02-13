@@ -19,6 +19,7 @@ public final class Configs {
                     / SwerveModuleConstants.drivingMotorReduction;
             // Convert from rotations to radians.
             double turningFactor = 2 * Math.PI;
+            // 12V battery.
             double nominalVoltage = 12.0;
             double drivingVelocityFeedForward = nominalVoltage / SwerveModuleConstants.driveWheelFreeSpeedRps;
 

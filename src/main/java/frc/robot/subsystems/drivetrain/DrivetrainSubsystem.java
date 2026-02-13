@@ -32,8 +32,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
             DriveConstants.backLeftTurningId,
             DriveConstants.backLeftAngularOffset);
 
-    // The robot uses a Studica NavX2 MXP IMU.
+    /** The robot uses a Studica NavX2 MXP IMU accelerometer connected to the MXP port on the RoboRio.
+     * All measurements are given in terms of degrees. */
     private final AHRS gyro = new AHRS(NavXComType.kMXP_SPI);
+
+    public DrivetrainSubsystem() {
+        zeroHeading();
+    }
 
     /**
      * Drive the robot using inputs from the joysticks. The x-speed is from the x-axis of the left joystick.
@@ -53,12 +58,20 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
         var swerveModuleStates = DriveConstants.driveKinematics.toSwerveModuleStates(
                 fieldRelative
-                        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered,
+                        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered,
+                                ySpeedDelivered,
+                                rotDelivered,
                                 getHeading())
                         : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
         setModuleStates(swerveModuleStates);
     }
 
+    /**
+     * Sets the state of each module.
+     * 
+     * @param desiredStates An array of SwerveModuleStates in the order [frontLeft, frontRight,
+     * backLeft, backRight].
+     */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.maxSpeed);
         frontLeft.setDesiredState(desiredStates[0]);
@@ -67,17 +80,28 @@ public class DrivetrainSubsystem extends SubsystemBase {
         backRight.setDesiredState(desiredStates[3]);
     }
 
+    /**
+     * Calls the resetEncoders() method on all modules. Might remove if unused.
+     */
     public void resetEncoders() {
-        frontLeft.resetEncoders();
-        frontRight.resetEncoders();
-        backLeft.resetEncoders();
-        backRight.resetEncoders();
+        frontLeft.syncAndResetEncoders();
+        frontRight.syncAndResetEncoders();
+        backLeft.syncAndResetEncoders();
+        backRight.syncAndResetEncoders();
     }
 
+    /**
+     * Sets the yaw of the gyrometer to 0.
+     */
     public void zeroHeading() {
         gyro.reset();
     }
 
+    /**
+     * @return The heading of the robot as Rotation2d object. The output is continuous (i.e. 361º
+     * does not wrap around to 1º). If the gyro is reversed (see Constants.java), then the direction
+     * is reversed.
+     */
     public Rotation2d getHeading() {
         double direction = DriveConstants.isGyroReversed ? -1 : 1;
         return Rotation2d.fromDegrees(direction * gyro.getAngle());
